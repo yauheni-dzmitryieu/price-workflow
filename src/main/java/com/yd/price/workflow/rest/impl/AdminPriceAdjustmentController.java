@@ -1,11 +1,12 @@
 package com.yd.price.workflow.rest.impl;
 
-import com.yd.price.workflow.persistence.entity.PriceAdjustment;
+import com.yd.price.workflow.db.entity.PriceAdjustment;
 import com.yd.price.workflow.rest.api.AdminPriceAdjustmentApi;
 import com.yd.price.workflow.rest.dto.PriceAdjustmentRequest;
 import com.yd.price.workflow.rest.dto.PriceAdjustmentResponse;
 import com.yd.price.workflow.service.api.PriceAdjustmentService;
 import org.springframework.core.convert.converter.Converter;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.Assert;
 import org.springframework.validation.annotation.Validated;
@@ -16,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/v1/admin/products")
+@RequestMapping(path="/api/v1/admin/products",consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 public class AdminPriceAdjustmentController implements AdminPriceAdjustmentApi {
     private final Converter<PriceAdjustmentRequest, PriceAdjustment> converterToEntity;
     private final PriceAdjustmentService service;
@@ -33,11 +34,13 @@ public class AdminPriceAdjustmentController implements AdminPriceAdjustmentApi {
     @Override
     @PostMapping("/{productId}/adjustments")
     public ResponseEntity<PriceAdjustmentResponse> addAdjustment(
-            @PathVariable Long productId,
+            @PathVariable(name = "productId") Long productId,
             @Validated
             @RequestBody PriceAdjustmentRequest priceAdjustmentRequest) {
         PriceAdjustment entity = converterToEntity.convert(priceAdjustmentRequest);
         service.addToProduct(productId, entity);
-        return ResponseEntity.ok(null);
+        PriceAdjustmentResponse body = new PriceAdjustmentResponse();
+        body.setId(entity.getId());
+        return ResponseEntity.ok(body);
     }
 }

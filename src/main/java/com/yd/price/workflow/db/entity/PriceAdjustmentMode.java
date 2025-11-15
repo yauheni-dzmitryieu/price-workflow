@@ -1,4 +1,4 @@
-package com.yd.price.workflow.persistence.entity;
+package com.yd.price.workflow.db.entity;
 
 public enum PriceAdjustmentMode {
     ABSOLUTE,

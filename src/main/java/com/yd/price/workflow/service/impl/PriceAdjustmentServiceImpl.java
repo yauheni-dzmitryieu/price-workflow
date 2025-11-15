@@ -1,10 +1,11 @@
 package com.yd.price.workflow.service.impl;
 
-import com.yd.price.workflow.persistence.entity.PriceAdjustment;
-import com.yd.price.workflow.persistence.repository.PriceAdjustmentMapper;
+import com.yd.price.workflow.db.entity.PriceAdjustment;
+import com.yd.price.workflow.db.repository.PriceAdjustmentMapper;
 import com.yd.price.workflow.service.api.PriceAdjustmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class PriceAdjustmentServiceImpl implements PriceAdjustmentService {
@@ -13,7 +14,9 @@ public class PriceAdjustmentServiceImpl implements PriceAdjustmentService {
     private PriceAdjustmentMapper mapper;
 
     @Override
+    @Transactional
     public PriceAdjustment addToProduct(Long productId, PriceAdjustment priceAdjustment) {
-        return null;
+        mapper.insert(priceAdjustment);
+        return priceAdjustment;
     }
 }

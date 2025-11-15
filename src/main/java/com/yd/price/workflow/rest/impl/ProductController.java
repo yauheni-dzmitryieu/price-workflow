@@ -1,6 +1,6 @@
 package com.yd.price.workflow.rest.impl;
 
-import com.yd.price.workflow.persistence.repository.ProductMapper;
+import com.yd.price.workflow.db.repository.ProductMapper;
 import com.yd.price.workflow.rest.api.ProductApi;
 import com.yd.price.workflow.rest.dto.ProductPriceResponse;
 import org.springframework.beans.factory.annotation.Autowired;

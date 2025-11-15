@@ -1,4 +1,4 @@
-package com.yd.price.workflow.persistence.repository;
+package com.yd.price.workflow.db.repository;
 
 import org.apache.ibatis.annotations.Mapper;
 
