@@ -20,3 +20,5 @@ CREATE TABLE IF NOT EXISTS price_adjustment
     mode       price_adjustment_mode NOT NULL,
     updated_at TIMESTAMP             NOT NULL DEFAULT now()
 );
+
+CREATE INDEX IF NOT EXISTS idx_price_adjustment_product ON price_adjustment (product_id);

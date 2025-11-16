@@ -1,7 +1,7 @@
 package com.yd.price.workflow.rest.api;
 
 import com.yd.price.workflow.rest.dto.PriceAdjustmentRequest;
-import com.yd.price.workflow.rest.dto.PriceAdjustmentResponse;
+import com.yd.price.workflow.model.PriceAdjustment;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -24,7 +24,7 @@ public interface AdminPriceAdjustmentApi {
     @Operation(summary = "Add price adjustment for the product")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successful operation",
-                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = PriceAdjustmentResponse.class), examples = {
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = PriceAdjustment.class), examples = {
                             @ExampleObject(name = "Successful operation", value = """
                                     {
                                     "productId": 1,
@@ -32,6 +32,6 @@ public interface AdminPriceAdjustmentApi {
                                     """)
                     })),
     })
-    ResponseEntity<PriceAdjustmentResponse> addAdjustment(@Parameter(in = ParameterIn.PATH, name = "productId", required = true) Long productId,
-                                                          @RequestBody(required = true) PriceAdjustmentRequest priceAdjustmentRequest);
+    ResponseEntity<PriceAdjustment> addAdjustment(@Parameter(in = ParameterIn.PATH, name = "productId", required = true) Long productId,
+                                                  @RequestBody(required = true) PriceAdjustmentRequest priceAdjustmentRequest);
 }

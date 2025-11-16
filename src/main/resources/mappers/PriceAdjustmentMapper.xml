@@ -13,6 +13,14 @@
         <result property="updatedAt" column="updated_at"/>
     </resultMap>
 
+    <resultMap id="PriceAdjustmentView" type="com.yd.price.workflow.db.entity.view.PriceAdjustmentView">
+        <constructor>
+            <idArg column="id" javaType="java.lang.Long"/>
+            <arg column="mode" javaType="com.yd.price.workflow.db.entity.PriceAdjustmentMode" typeHandler="com.yd.price.workflow.db.handler.EnumTypeHandler"/>
+            <arg column="value" javaType="java.math.BigDecimal"/>
+        </constructor>
+    </resultMap>
+
     <insert id="insert" parameterType="com.yd.price.workflow.db.entity.PriceAdjustment" keyProperty="id" useGeneratedKeys="true">
         insert into price_adjustment(product_id, type, value, mode, updated_at)
         values (#{productId},
@@ -23,10 +31,12 @@
         returning id;
     </insert>
 
-    <select id="findAll" parameterType="long" resultMap="PriceAdjustmentResultMap">
-        SELECT id, product_id, type, value, mode, updated_at
-        FROM price_adjustment
-        ORDER BY updated_at DESC
+    <select id="findAllByProductId" parameterType="long" resultMap="PriceAdjustmentView">
+        select id,
+               mode,
+               value
+        from price_adjustment
+        where product_id = #{productId};
     </select>
 
 </mapper>
