@@ -1,5 +1,34 @@
 # price-workflow
 
+# Tasks
+- [X] Project skeleton
+- [X] Postgres connection
+- [ ] Cache L1
+  - [X] Price adjustment
+  - [ ] Product
+- [ ] Cache L2
+  - [X] Price adjustment
+  - [ ] Product
+- [X] Add Redis to docker-compose
+- [ ] Metrics
+  - [ ] Enable AspectJ
+  - [ ] Add metrics for DB
+  - [ ] Add metrics for Redis
+  - [ ] Add metrics to track failed requests
+  - [ ] Wrap requests
+- [ ] Add requestId /...
+- [ ] Prometheus 
+  - [ ] Add to docker-compose
+  - [ ] Configure dashboards
+- [ ] Add logs
+- [ ] Adjust logic to allow work stable in case Redis connection failed
+- [ ] Add app to docker-compose with 2 replica
+- [ ] Update performance tests
+- [ ] Unit tests
+- [ ] Integration tests
+- [ ] Java Docs
+- [ ] Architecture (schema, descriptions)
+
 # Domains
 
 ## Product

@@ -6,11 +6,12 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Set;
 
 @Mapper
 public interface PriceAdjustmentMapper {
 
-    int insert(PriceAdjustment entity);
+    int create(PriceAdjustment entity);
 
-    List<PriceAdjustmentView> findAllByProductId(@Param("productId") Long productId);
+    Set<PriceAdjustment> findAllByProductId(@Param("productId") Long productId);
 }

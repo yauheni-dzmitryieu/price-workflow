@@ -21,7 +21,7 @@
         </constructor>
     </resultMap>
 
-    <insert id="insert" parameterType="com.yd.price.workflow.db.entity.PriceAdjustment" keyProperty="id" useGeneratedKeys="true">
+    <insert id="create" parameterType="com.yd.price.workflow.db.entity.PriceAdjustment" keyProperty="id" useGeneratedKeys="true">
         insert into price_adjustment(product_id, type, value, mode, updated_at)
         values (#{productId},
                 CAST(#{type} as price_adjustment_type),
@@ -31,10 +31,13 @@
         returning id;
     </insert>
 
-    <select id="findAllByProductId" parameterType="long" resultMap="PriceAdjustmentView">
+    <select id="findAllByProductId" parameterType="long" resultMap="PriceAdjustmentResultMap">
         select id,
+               product_id,
+               type,
                mode,
-               value
+               value,
+               updated_at
         from price_adjustment
         where product_id = #{productId};
     </select>
