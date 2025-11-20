@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class ProductController implements ProductApi {
 
     @Autowired
-    private ProductService productService;
+    private ProductService<ProductPrice> productService;
 
     @Override
     @GetMapping("api/v1/products/{productId}/price")

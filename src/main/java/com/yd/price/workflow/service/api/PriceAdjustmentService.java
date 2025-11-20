@@ -10,7 +10,7 @@ public interface PriceAdjustmentService {
 
     Set<PriceAdjustment> getAll(Long productId);
 
-    default void addAll(Long productId, Set<PriceAdjustment> priceAdjustments) {
+    default void saveAll(Long productId, Set<PriceAdjustment> priceAdjustments) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 }

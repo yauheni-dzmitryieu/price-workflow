@@ -48,7 +48,7 @@ public class PriceAdjustmentServiceImpl implements PriceAdjustmentService {
         }
 
         Set<PriceAdjustment> storedPriceAdjustments = mapper.findAllByProductId(productId);
-        priceAdjustmentCacheService.addAll(productId, storedPriceAdjustments);
+        priceAdjustmentCacheService.saveAll(productId, storedPriceAdjustments);
         return storedPriceAdjustments;
     }
 }

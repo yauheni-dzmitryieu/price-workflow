@@ -54,7 +54,7 @@ public class PriceAdjustmentCacheServiceImpl implements PriceAdjustmentService {
     }
 
     @Override
-    public void addAll(Long productId, Set<PriceAdjustment> priceAdjustments) {
+    public void saveAll(Long productId, Set<PriceAdjustment> priceAdjustments) {
         priceAdjustmentCache.addAll(productId, priceAdjustments);
     }
 }

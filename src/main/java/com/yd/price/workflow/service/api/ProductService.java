@@ -1,8 +1,12 @@
 package com.yd.price.workflow.service.api;
 
-import com.yd.price.workflow.model.ProductPrice;
+import com.yd.price.workflow.db.entity.view.ProductBasePriceView;
+import com.yd.price.workflow.model.BaseProductPrice;
 
-public interface ProductService {
+public interface ProductService<T extends BaseProductPrice> {
 
-    ProductPrice getProductPrice(Long productId);
+    T getProductPrice(Long productId);
+
+    //TODO rework models
+    void save(ProductBasePriceView productPrice);
 }
