@@ -16,11 +16,12 @@
   - [ ] Add metrics for Redis
   - [ ] Add metrics to track failed requests
   - [ ] Wrap requests
-- [ ] Add requestId /...
+- [X] Add requestId /...
 - [ ] Prometheus 
   - [ ] Add to docker-compose
   - [ ] Configure dashboards
 - [ ] Add logs
+  - [X] Add log configuration
 - [ ] Adjust logic to allow work stable in case Redis connection failed
 - [ ] Add app to docker-compose with 2 replica
 - [ ] Update performance tests

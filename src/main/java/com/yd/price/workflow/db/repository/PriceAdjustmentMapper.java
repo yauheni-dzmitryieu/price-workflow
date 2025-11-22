@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Set;
 
 @Mapper
-public interface PriceAdjustmentMapper {
+public interface PriceAdjustmentMapper extends Dao<PriceAdjustment> {
 
     int create(PriceAdjustment entity);
 

@@ -4,6 +4,9 @@ import com.yd.price.workflow.rest.api.AdminPriceAdjustmentApi;
 import com.yd.price.workflow.rest.dto.PriceAdjustmentRequest;
 import com.yd.price.workflow.model.PriceAdjustment;
 import com.yd.price.workflow.service.api.PriceAdjustmentService;
+import io.micrometer.core.annotation.Timed;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -16,10 +19,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping(path="/api/v1/admin/products",consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(path = "/api/v1/admin/products", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 public class AdminPriceAdjustmentController implements AdminPriceAdjustmentApi {
     private final Converter<PriceAdjustmentRequest, com.yd.price.workflow.db.entity.PriceAdjustment> converterToEntity;
     private final PriceAdjustmentService service;
+    private static final Logger logger = LoggerFactory.getLogger(AdminPriceAdjustmentController.class);
 
     public AdminPriceAdjustmentController(Converter<PriceAdjustmentRequest, com.yd.price.workflow.db.entity.PriceAdjustment> converterToEntity,
                                           PriceAdjustmentService service) {
@@ -32,6 +36,7 @@ public class AdminPriceAdjustmentController implements AdminPriceAdjustmentApi {
 
     @Override
     @PostMapping("/{productId}/adjustments")
+    @Timed(value = "AdminPriceAdjustmentController.addAdjustment", percentiles = {0.5, 0.95, 0.99})
     public ResponseEntity<PriceAdjustment> addAdjustment(
             @PathVariable(name = "productId") Long productId,
             @Validated
@@ -40,7 +45,8 @@ public class AdminPriceAdjustmentController implements AdminPriceAdjustmentApi {
         service.addToProduct(productId, entity);
 
         //TODO
-        PriceAdjustment body = new PriceAdjustment(entity.getId(), null, null,null,null);
+        logger.info("Accept request with id: {}", productId);
+        PriceAdjustment body = new PriceAdjustment(entity.getId(), null, null, null, null);
         return ResponseEntity.ok(body);
     }
 }
