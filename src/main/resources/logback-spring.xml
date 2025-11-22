@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true" scanPeriod="30 seconds">
+
+    <springProperty name="LOG_PATH" source="logback.file.path" defaultValue="logs"/>
+    <springProperty name="LOG_NAME" source="logback.file.name" defaultValue="application.log"/>
+    <springProperty name="MAX_SIZE" source="logback.file.max-size" defaultValue="20MB"/>
+    <springProperty name="MAX_HISTORY" source="logback.file.max-history" defaultValue="14"/>
+
+    <springProperty name="CONSOLE_PATTERN" source="logback.pattern.console" defaultValue="%green(%d{ISO8601}) [%thread] [%X{X-Correlation-ID}] %highlight(%-5level) %yellow(%logger{36}) - %msg%n" />
+    <springProperty name="FILE_PATTERN" source="logback.pattern.file" defaultValue="%d{ISO8601} [%thread] [%X{X-Correlation-ID}] %-5level %logger{36} - %msg%n" />
+
+
+    <!-- ========================================================= -->
+    <!--                          DEV                              -->
+    <!-- ========================================================= -->
+    <springProfile name="!prod">
+        <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+            <encoder>
+                <pattern>${CONSOLE_PATTERN}</pattern>
+            </encoder>
+        </appender>
+
+        <!-- Root -->
+        <root level="INFO">
+            <appender-ref ref="CONSOLE"/>
+        </root>
+
+    </springProfile>
+
+
+    <!-- ========================================================= -->
+    <!--                          PROD                             -->
+    <!-- ========================================================= -->
+    <springProfile name="prod">
+
+        <appender name="JSON_FILE_BASE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+            <file>${LOG_PATH}/${LOG_NAME}</file>
+
+            <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+                <fileNamePattern>${LOG_PATH}/${LOG_NAME}-%d{yyyy-MM-dd}.%i.gz</fileNamePattern>
+                <maxFileSize>${MAX_SIZE}</maxFileSize>
+                <maxHistory>${MAX_HISTORY}</maxHistory>
+            </rollingPolicy>
+
+            <encoder class="net.logstash.logback.encoder.LogstashEncoder"/>
+        </appender>
+
+        <appender name="JSON_FILE" class="ch.qos.logback.classic.AsyncAppender">
+            <queueSize>16384</queueSize>
+            <discardingThreshold>20</discardingThreshold>
+            <neverBlock>true</neverBlock>
+            <includeCallerData>false</includeCallerData>
+            <appender-ref ref="JSON_FILE_BASE"/>
+        </appender>
+
+        <!-- Root -->
+        <root level="INFO">
+            <appender-ref ref="JSON_FILE"/>
+        </root>
+
+        <logger name="org.mybatis" level="INFO" additivity="false">
+            <appender-ref ref="JSON_FILE"/>
+        </logger>
+        <logger name="org.mybatis.spring" level="INFO" additivity="false">
+            <appender-ref ref="JSON_FILE"/>
+        </logger>
+
+    </springProfile>
+
+</configuration>
