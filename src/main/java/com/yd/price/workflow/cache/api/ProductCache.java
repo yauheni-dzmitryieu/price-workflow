@@ -8,5 +8,4 @@ public interface ProductCache {
 
     void put(ProductBasePriceView productBasePriceView);
 
-    boolean isEnabled();
 }

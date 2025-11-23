@@ -5,14 +5,18 @@ import com.yd.price.workflow.db.entity.PriceAdjustment;
 import com.yd.price.workflow.utils.HostUtils;
 import org.redisson.api.RTopic;
 import org.redisson.api.RedissonClient;
+import org.springframework.util.Assert;
+
+import java.util.Optional;
 
 public class CacheInvalidationPublisher {
     private final RTopic refreshTopic;
     private final RTopic evictTopic;
 
-    public CacheInvalidationPublisher(RedissonClient redisson) {
-        this.refreshTopic = redisson.getTopic(PriceAdjustmentCache.REFRESH_TOPIC);
-        this.evictTopic = redisson.getTopic(PriceAdjustmentCache.EVICT_TOPIC);
+    public CacheInvalidationPublisher(Optional<RedissonClient> redisson) {
+        Assert.isTrue(redisson.isPresent(), "redisson must not be null");
+        this.refreshTopic = redisson.get().getTopic(PriceAdjustmentCache.REFRESH_TOPIC);
+        this.evictTopic = redisson.get().getTopic(PriceAdjustmentCache.EVICT_TOPIC);
     }
 
     public void publishRefresh(PriceAdjustment priceAdjustment) {

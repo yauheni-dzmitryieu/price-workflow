@@ -5,7 +5,6 @@ import com.yd.price.workflow.cache.l1.PriceAdjustmentCacheL1Caffeine;
 import com.yd.price.workflow.cache.l2.PriceAdjustmentCacheL2Redis;
 import com.yd.price.workflow.cache.sync.CacheInvalidationPublisher;
 import com.yd.price.workflow.db.entity.PriceAdjustment;
-import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
 import java.util.Set;
@@ -23,35 +22,25 @@ public class PriceAdjustmentCompositeCache implements PriceAdjustmentCache {
 
     @Override
     public Set<PriceAdjustment> getAll(Long productId) {
-        if (l1Caffeine.isEnabled()) {
-            Set<PriceAdjustment> l1PriceAdjustments = l1Caffeine.getAll(productId);
-            if (!CollectionUtils.isEmpty(l1PriceAdjustments)) {
-                return l1PriceAdjustments;
-            }
+        Set<PriceAdjustment> l1PriceAdjustments = l1Caffeine.getAll(productId);
+        if (!CollectionUtils.isEmpty(l1PriceAdjustments)) {
+            return l1PriceAdjustments;
         }
 
-        if (l2Redis.isEnabled()) {
-            Set<PriceAdjustment> l2PriceAdjustments = l2Redis.getAll(productId);
-            if (!CollectionUtils.isEmpty(l2PriceAdjustments)) {
-                if (l1Caffeine.isEnabled()) {
-                    l1Caffeine.addAll(productId, l2PriceAdjustments);
-                }
+        Set<PriceAdjustment> l2PriceAdjustments = l2Redis.getAll(productId);
+        if (!CollectionUtils.isEmpty(l2PriceAdjustments)) {
+            l1Caffeine.addAll(productId, l2PriceAdjustments);
 
-                return l2PriceAdjustments;
-            }
+            return l2PriceAdjustments;
         }
         return null;
     }
 
     @Override
     public void put(Long productId, PriceAdjustment value) {
-        if (l2Redis.isEnabled()) {
-            l2Redis.put(productId, value);
-        }
+        l2Redis.put(productId, value);
 
-        if (l1Caffeine.isEnabled()) {
-            l1Caffeine.put(productId, value);
-        }
+        l1Caffeine.put(productId, value);
 
         publisher.publishRefresh(value);
     }
@@ -60,32 +49,19 @@ public class PriceAdjustmentCompositeCache implements PriceAdjustmentCache {
     @Override
     public int addAll(Long productId, Set<PriceAdjustment> source) {
         int added = 0;
-        if (l2Redis.isEnabled()) {
-            added = l2Redis.addAll(productId, source);
-        }
+        added = l2Redis.addAll(productId, source);
 
-        if (l1Caffeine.isEnabled()) {
-            added = l1Caffeine.addAll(productId, source);
-        }
+        added = l1Caffeine.addAll(productId, source);
         //TODO Think about: publish refresh L1 for each nodes
         return added;
     }
 
     @Override
     public void evict(Long productId) {
-        if (l1Caffeine.isEnabled()) {
-            l1Caffeine.evict(productId);
-        }
+        l1Caffeine.evict(productId);
 
-        if (l2Redis.isEnabled()) {
-            l2Redis.evict(productId);
-        }
+        l2Redis.evict(productId);
 
         publisher.publishEvict(productId);
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return l1Caffeine.isEnabled() || l2Redis.isEnabled();
     }
 }

@@ -1,11 +1,14 @@
-package com.yd.price.workflow.config;
+package com.yd.price.workflow.config.cache;
 
+import com.github.benmanes.caffeine.cache.Cache;
 import com.yd.price.workflow.cache.api.PriceAdjustmentCache;
 import com.yd.price.workflow.cache.api.ProductCache;
 import com.yd.price.workflow.cache.sync.CacheInvalidationPublisher;
 import com.yd.price.workflow.cache.sync.L1RefreshCacheListener;
-import com.yd.price.workflow.config.factory.PriceAdjustmentCacheFactoryBean;
-import com.yd.price.workflow.config.factory.ProductCacheFactoryBean;
+import com.yd.price.workflow.config.cache.factory.PriceAdjustmentCacheFactoryBean;
+import com.yd.price.workflow.config.cache.factory.ProductCacheFactoryBean;
+import com.yd.price.workflow.db.entity.PriceAdjustment;
+import com.yd.price.workflow.db.entity.view.ProductBasePriceView;
 import com.yd.price.workflow.service.api.PriceAdjustmentService;
 import com.yd.price.workflow.service.api.ProductService;
 import com.yd.price.workflow.service.impl.PriceAdjustmentCacheServiceImpl;
@@ -22,11 +25,12 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 
 import java.util.Optional;
+import java.util.Set;
 
 @Configuration
 @EnableConfigurationProperties(CacheProperties.class)
 @ConditionalOnExpression("${app.cache.l1.enabled:false} or ${app.cache.l2.enabled:false}")
-public class CacheServiceConfiguration {
+public class CacheServiceConfig {
 
     @Autowired
     private Optional<RedissonClient> redissonClient;
@@ -40,7 +44,7 @@ public class CacheServiceConfiguration {
             @ConditionalOnBooleanProperty(prefix = "app.cache.l2", value = "enabled", havingValue = true)
     })
     public CacheInvalidationPublisher cacheInvalidationPublisher() {
-        return new CacheInvalidationPublisher(redissonClient.get());
+        return new CacheInvalidationPublisher(redissonClient);
     }
 
     @Bean
@@ -50,13 +54,14 @@ public class CacheServiceConfiguration {
     }
 
     @Bean
-    public ProductCacheFactoryBean productCache() {
-        return new ProductCacheFactoryBean(cacheProperties, redissonClient.orElse(null));
+    public ProductCacheFactoryBean productCache(Optional<Cache<Long, ProductBasePriceView>> productL1Cache) {
+        return new ProductCacheFactoryBean(cacheProperties, productL1Cache, redissonClient);
     }
 
     @Bean
-    public PriceAdjustmentCacheFactoryBean priceAdjustmentCache(Optional<CacheInvalidationPublisher> publisher) {
-        return new PriceAdjustmentCacheFactoryBean(cacheProperties, redissonClient.orElse(null), publisher.orElse(null));
+    public PriceAdjustmentCacheFactoryBean priceAdjustmentCache(Optional<Cache<Long, Set<PriceAdjustment>>> priceAdjustmentL1Cache,
+                                                                Optional<CacheInvalidationPublisher> publisher) {
+        return new PriceAdjustmentCacheFactoryBean(cacheProperties, priceAdjustmentL1Cache, redissonClient, publisher);
     }
 
     @Bean

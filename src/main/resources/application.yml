@@ -48,5 +48,17 @@ app:
   cache:
     l1:
       enabled: true
+      caches:
+        product-cache:
+          expire-after-write: 10m
+          maximum-size: 10_000
+        price-adjustment-cache:
+          expire-after-write: 10m
+          maximum-size: 10_000
     l2:
       enabled: true
+      caches:
+        product-cache:
+          expire: 1d
+        price-adjustment-cache:
+          expire: 1d

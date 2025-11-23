@@ -19,21 +19,15 @@ public class ProductCompositeCache implements ProductCache {
 
     @Override
     public ProductBasePriceView get(Long productId) {
-        if (l1Caffeine.isEnabled()) {
-            ProductBasePriceView view = l1Caffeine.get(productId);
-            if (view != null) {
-                return view;
-            }
+        ProductBasePriceView view = l1Caffeine.get(productId);
+        if (view != null) {
+            return view;
         }
 
-        if (l2Redis.isEnabled()) {
-            ProductBasePriceView view = l2Redis.get(productId);
-            if (view != null) {
-                if (l2Redis.isEnabled()) {
-                    l1Caffeine.put(view);
-                }
-                return view;
-            }
+        view = l2Redis.get(productId);
+        if (view != null) {
+            l1Caffeine.put(view);
+            return view;
         }
 
         return null;
@@ -41,19 +35,10 @@ public class ProductCompositeCache implements ProductCache {
 
     @Override
     public void put(ProductBasePriceView productBasePriceView) {
-        if (l2Redis.isEnabled()) {
-            l2Redis.put(productBasePriceView);
-        }
+        l2Redis.put(productBasePriceView);
 
-        if (l1Caffeine.isEnabled()) {
-            l1Caffeine.put(productBasePriceView);
-        }
+        l1Caffeine.put(productBasePriceView);
 
         //TODO publish refresh
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return l1Caffeine.isEnabled() || l2Redis.isEnabled();
     }
 }

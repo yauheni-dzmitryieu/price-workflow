@@ -9,27 +9,21 @@ import java.time.Duration;
 
 public class ProductCacheL2Redis implements ProductCache {
     private final RedissonClient redisson;
-    private boolean enabled = true; //TODO replace use property
+    private final Duration expire;
 
-    public ProductCacheL2Redis(RedissonClient redisson) {
+    public ProductCacheL2Redis(RedissonClient redisson, Duration expire) {
         this.redisson = redisson;
+        this.expire = expire;
     }
 
     @Override
     public ProductBasePriceView get(Long productId) {
-        return enabled ? getCache(productId).get() : null;
+        return getCache(productId).get();
     }
 
     @Override
     public void put(ProductBasePriceView productBasePriceView) {
-        if (enabled) {
-            getCache(productBasePriceView.id()).set(productBasePriceView, Duration.ofMinutes(30)); //TODO move to property
-        }
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return this.enabled;
+        getCache(productBasePriceView.id()).set(productBasePriceView, this.expire);
     }
 
     private RBucket<ProductBasePriceView> getCache(Long productId) {

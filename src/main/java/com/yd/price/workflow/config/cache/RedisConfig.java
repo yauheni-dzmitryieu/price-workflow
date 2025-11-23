@@ -1,4 +1,4 @@
-package com.yd.price.workflow.config;
+package com.yd.price.workflow.config.cache;
 
 import org.redisson.Redisson;
 import org.redisson.api.RedissonClient;

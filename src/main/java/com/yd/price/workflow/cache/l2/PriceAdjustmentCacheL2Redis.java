@@ -11,47 +11,36 @@ import java.util.Set;
 public class PriceAdjustmentCacheL2Redis implements PriceAdjustmentCache {
 
     private final RedissonClient redisson;
-    private boolean enabled = true; //TODO replace use property
+    private final Duration expire;
 
-    public PriceAdjustmentCacheL2Redis(RedissonClient redisson) {
+    public PriceAdjustmentCacheL2Redis(RedissonClient redisson, Duration expire) {
         this.redisson = redisson;
+        this.expire = expire;
     }
 
     @Override
     public Set<PriceAdjustment> getAll(Long productId) {
-        return enabled ? getCache(productId).readAll() : null;
+        return getCache(productId).readAll();
     }
 
     @Override
     public void put(Long productId, PriceAdjustment result) {
-        if (enabled) {
-            RSet<PriceAdjustment> cache = getCache(productId);
-            cache.add(result);
-            cache.expire(Duration.ofMinutes(30)); //TODO configure via property
-        }
+        RSet<PriceAdjustment> cache = getCache(productId);
+        cache.add(result);
+        cache.expire(this.expire);
     }
 
     @Override
     public int addAll(Long productId, Set<PriceAdjustment> source) {
-        if (!enabled) {
-            return 0;
-        }
         RSet<PriceAdjustment> cache = getCache(productId);
         int added = cache.addAllCounted(source);
-        cache.expire(Duration.ofMinutes(30));//TODO
+        cache.expire(this.expire);
         return added;
     }
 
     @Override
     public void evict(Long productId) {
-        if (enabled) {
-            getCache(productId).clear(); //TODO check
-        }
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return this.enabled;
+        getCache(productId).clear(); //TODO check
     }
 
     private RSet<PriceAdjustment> getCache(Long productId) {
