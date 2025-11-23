@@ -30,7 +30,6 @@
 
         <!--Tests -->
         <junit-platform-suite.version>1.12.2</junit-platform-suite.version>
-        <junit-jupiter.version>5.11.4</junit-jupiter.version>
         <rest-assured.version>5.4.0</rest-assured.version>
         <json-unit.version>3.4.1</json-unit.version>
         <cucumber.version>7.14.1</cucumber.version>
@@ -130,12 +129,6 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-engine</artifactId>
-            <version>${junit-jupiter.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>

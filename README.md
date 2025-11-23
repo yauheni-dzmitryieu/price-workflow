@@ -3,19 +3,19 @@
 # Tasks
 - [X] Project skeleton
 - [X] Postgres connection
-- [ ] Cache L1
+- [X] Cache L1
   - [X] Price adjustment
-  - [ ] Product
-- [ ] Cache L2
+  - [X] Product
+- [X] Cache L2
   - [X] Price adjustment
-  - [ ] Product
+  - [X] Product
 - [X] Add Redis to docker-compose
 - [ ] Metrics
-  - [ ] Enable AspectJ
-  - [ ] Add metrics for DB
+  - [X] Enable AspectJ
+  - [X] Add metrics for DB
   - [ ] Add metrics for Redis
   - [ ] Add metrics to track failed requests
-  - [ ] Wrap requests
+  - [X] Wrap requests
 - [X] Add requestId /...
 - [ ] Prometheus 
   - [ ] Add to docker-compose

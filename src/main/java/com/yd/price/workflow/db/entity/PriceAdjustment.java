@@ -17,6 +17,14 @@ public class PriceAdjustment {
     private PriceAdjustmentMode mode;
     private LocalDateTime updatedAt;
 
+    public PriceAdjustment() {
+    }
+
+    public PriceAdjustment(PriceAdjustmentMode mode, BigDecimal value) {
+        this.mode = mode;
+        this.value = value;
+    }
+
     public Long getId() {
         return id;
     }

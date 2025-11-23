@@ -2,8 +2,8 @@ package com.yd.price.workflow.exception;
 
 import java.util.List;
 
-public class ErrorCodeAwareException extends RuntimeException{
-    
+public class ErrorCodeAwareException extends RuntimeException {
+
     private final List<Integer> codes;
 
     public ErrorCodeAwareException(Integer code) {
