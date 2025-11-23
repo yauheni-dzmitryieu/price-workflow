@@ -4,12 +4,10 @@ import com.yd.price.workflow.cache.api.PriceAdjustmentCache;
 import com.yd.price.workflow.db.entity.PriceAdjustment;
 import org.redisson.api.RSet;
 import org.redisson.api.RedissonClient;
-import org.springframework.stereotype.Component;
 
 import java.time.Duration;
 import java.util.Set;
 
-@Component
 public class PriceAdjustmentCacheL2Redis implements PriceAdjustmentCache {
 
     private final RedissonClient redisson;

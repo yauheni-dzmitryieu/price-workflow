@@ -5,10 +5,10 @@ import com.yd.price.workflow.db.entity.PriceAdjustment;
 import com.yd.price.workflow.service.api.PriceAdjustmentService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.support.TransactionSynchronization;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
+import org.springframework.util.Assert;
 
 import java.util.Set;
 
@@ -20,8 +20,8 @@ public class PriceAdjustmentCacheServiceImpl implements PriceAdjustmentService {
 
     private final PriceAdjustmentCache priceAdjustmentCache;
 
-    public PriceAdjustmentCacheServiceImpl(@Qualifier("priceAdjustmentCacheComposite")
-                                           PriceAdjustmentCache priceAdjustmentCache) {
+    public PriceAdjustmentCacheServiceImpl(PriceAdjustmentCache priceAdjustmentCache) {
+        Assert.notNull(priceAdjustmentCache, "priceAdjustmentCache must not be null");
         this.priceAdjustmentCache = priceAdjustmentCache;
     }
 

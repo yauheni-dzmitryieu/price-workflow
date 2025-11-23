@@ -4,13 +4,11 @@ import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.yd.price.workflow.cache.api.PriceAdjustmentCache;
 import com.yd.price.workflow.db.entity.PriceAdjustment;
-import org.springframework.stereotype.Component;
 
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.TimeUnit;
 
-@Component
 public class PriceAdjustmentCacheL1Caffeine implements PriceAdjustmentCache {
 
     private final Cache<Long, Set<PriceAdjustment>> cache;

@@ -27,7 +27,7 @@ management:
         include: health,info,metrics,prometheus
   health:
     redis:
-      enabled: true
+      enabled: false
     db:
       enabled: true
   endpoint:
@@ -43,3 +43,10 @@ mybatis:
 server:
   port: 8087
 
+
+app:
+  cache:
+    l1:
+      enabled: true
+    l2:
+      enabled: true

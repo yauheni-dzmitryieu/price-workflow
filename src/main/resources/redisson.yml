@@ -1,0 +1,12 @@
+sentinelServersConfig:
+  masterName: "mymaster"
+  database: 0
+  sentinelAddresses:
+    - "redis://127.0.0.1:26379"
+    - "redis://127.0.0.1:26380"
+    - "redis://127.0.0.1:26381"
+  timeout: 3000
+  retryAttempts: 3
+  retryInterval: 10000
+  checkSentinelsList: false
+  sentinelsDiscovery: true

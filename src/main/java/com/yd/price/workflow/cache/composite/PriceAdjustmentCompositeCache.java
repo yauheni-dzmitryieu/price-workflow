@@ -10,13 +10,12 @@ import org.springframework.util.CollectionUtils;
 
 import java.util.Set;
 
-@Component
-public class PriceAdjustmentCacheComposite implements PriceAdjustmentCache {
+public class PriceAdjustmentCompositeCache implements PriceAdjustmentCache {
     private final PriceAdjustmentCacheL1Caffeine l1Caffeine;
     private final PriceAdjustmentCacheL2Redis l2Redis;
     private final CacheInvalidationPublisher publisher; //TODO replace use interfaces + qualifiers
 
-    public PriceAdjustmentCacheComposite(PriceAdjustmentCacheL1Caffeine l1Caffeine, PriceAdjustmentCacheL2Redis l2Redis, CacheInvalidationPublisher publisher) {
+    public PriceAdjustmentCompositeCache(PriceAdjustmentCacheL1Caffeine l1Caffeine, PriceAdjustmentCacheL2Redis l2Redis, CacheInvalidationPublisher publisher) {
         this.l1Caffeine = l1Caffeine;
         this.l2Redis = l2Redis;
         this.publisher = publisher;

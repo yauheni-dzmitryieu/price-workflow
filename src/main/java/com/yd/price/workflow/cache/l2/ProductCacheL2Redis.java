@@ -4,11 +4,9 @@ import com.yd.price.workflow.cache.api.ProductCache;
 import com.yd.price.workflow.db.entity.view.ProductBasePriceView;
 import org.redisson.api.RBucket;
 import org.redisson.api.RedissonClient;
-import org.springframework.stereotype.Component;
 
 import java.time.Duration;
 
-@Component
 public class ProductCacheL2Redis implements ProductCache {
     private final RedissonClient redisson;
     private boolean enabled = true; //TODO replace use property

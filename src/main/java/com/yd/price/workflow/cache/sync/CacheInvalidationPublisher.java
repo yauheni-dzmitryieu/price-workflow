@@ -5,9 +5,7 @@ import com.yd.price.workflow.db.entity.PriceAdjustment;
 import com.yd.price.workflow.utils.HostUtils;
 import org.redisson.api.RTopic;
 import org.redisson.api.RedissonClient;
-import org.springframework.stereotype.Component;
 
-@Component
 public class CacheInvalidationPublisher {
     private final RTopic refreshTopic;
     private final RTopic evictTopic;

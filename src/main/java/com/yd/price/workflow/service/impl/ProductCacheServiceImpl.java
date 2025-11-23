@@ -10,13 +10,15 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.support.TransactionSynchronization;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
+import org.springframework.util.Assert;
 
 @Service
 public class ProductCacheServiceImpl implements ProductService<BaseProductPrice> {
     public static final Logger log = LoggerFactory.getLogger(PriceAdjustmentCacheServiceImpl.class);
     private final ProductCache productCache;
 
-    public ProductCacheServiceImpl(@Qualifier("productCacheComposite") ProductCache productCache) {
+    public ProductCacheServiceImpl(ProductCache productCache) {
+        Assert.notNull(productCache, "productCache must not be null");
         this.productCache = productCache;
     }
 

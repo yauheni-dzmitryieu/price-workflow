@@ -4,11 +4,9 @@ import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.yd.price.workflow.cache.api.ProductCache;
 import com.yd.price.workflow.db.entity.view.ProductBasePriceView;
-import org.springframework.stereotype.Component;
 
 import java.util.concurrent.TimeUnit;
 
-@Component
 public class ProductCacheL1Caffeine implements ProductCache {
 
     private final Cache<Long, ProductBasePriceView> cache;
