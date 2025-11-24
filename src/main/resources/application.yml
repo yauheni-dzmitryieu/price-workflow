@@ -9,6 +9,8 @@ spring:
   flyway:
     enabled: true
     locations: classpath:db/migration
+  config:
+    import: classpath:error-messages.yml
 
 
 springdoc:

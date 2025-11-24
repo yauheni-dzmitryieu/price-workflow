@@ -1,10 +1,11 @@
 package com.yd.price.workflow.exception;
 
-import com.yd.price.workflow.model.PriceWorkflowErrorCode;
-
 public class ResourceNotFoundException extends ErrorCodeAwareException {
+    public ResourceNotFoundException(ErrorCode code, Object... arguments) {
+        super(code, arguments);
+    }
 
-    public ResourceNotFoundException(Long id, PriceWorkflowErrorCode code) {
-        super("Resource not found: " + id, code.getCode());// TODO
+    public ResourceNotFoundException(ErrorCode code, Object[] arguments, Throwable cause) {
+        super(code, arguments, cause);
     }
 }
