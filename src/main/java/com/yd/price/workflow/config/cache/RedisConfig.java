@@ -1,9 +1,11 @@
 package com.yd.price.workflow.config.cache;
 
+import com.yd.price.workflow.health.redis.RedissonHealthIndicator;
 import org.redisson.Redisson;
 import org.redisson.api.RedissonClient;
 import org.redisson.config.Config;
 import org.redisson.spring.data.connection.RedissonConnectionFactory;
+import org.springframework.boot.actuate.health.HealthIndicator;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBooleanProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -25,5 +27,10 @@ public class RedisConfig {
         Config config = Config.fromYAML(getClass().getClassLoader().getResource("redisson.yml"));
 
         return Redisson.create(config);
+    }
+
+    @Bean
+    public HealthIndicator redissonHealthIndicator(RedissonClient redissonClient) {
+        return new RedissonHealthIndicator(redissonClient);
     }
 }

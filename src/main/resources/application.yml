@@ -49,7 +49,7 @@ server:
 app:
   cache:
     l1:
-      enabled: true
+      enabled: false
       caches:
         product-cache:
           expire-after-write: 10m
@@ -58,7 +58,7 @@ app:
           expire-after-write: 10m
           maximum-size: 10_000
     l2:
-      enabled: true
+      enabled: false
       caches:
         product-cache:
           expire: 1d

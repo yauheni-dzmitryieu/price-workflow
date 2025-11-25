@@ -22,13 +22,15 @@
   - [ ] Configure dashboards
 - [ ] Add logs
   - [X] Add log configuration
+  - [X] Add exception handler
 - [ ] Adjust logic to allow work stable in case Redis connection failed
 - [ ] Add app to docker-compose with 2 replica
 - [ ] Update performance tests
 - [ ] Unit tests
 - [ ] Integration tests
-- [ ] Java Docs
-- [ ] Architecture (schema, descriptions)
+- [ ] Documentations
+  - [X] API docs 
+  - [ ] Architecture (schema, descriptions)
 
 # Domains
 

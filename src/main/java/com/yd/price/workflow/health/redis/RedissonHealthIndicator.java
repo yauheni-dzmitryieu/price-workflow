@@ -5,9 +5,7 @@ import org.redisson.api.Node;
 import org.redisson.api.RedissonClient;
 import org.springframework.boot.actuate.health.Health;
 import org.springframework.boot.actuate.health.HealthIndicator;
-import org.springframework.stereotype.Component;
 
-@Component
 public class RedissonHealthIndicator implements HealthIndicator {
     private final RedissonClient redissonClient;
 

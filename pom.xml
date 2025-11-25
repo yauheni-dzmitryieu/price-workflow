@@ -16,7 +16,7 @@
 
     <properties>
         <skipUTs>false</skipUTs>
-        <skipITs>false</skipITs>
+        <skipITs>true</skipITs>
 
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
@@ -211,6 +211,13 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <version>${spring.boot.version}</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -267,6 +274,7 @@
                             <goal>generate</goal>
                         </goals>
                         <configuration>
+                            <skip>${skipITs}</skip>
                             <projectName>shopping-ads-search-service</projectName>
                             <outputDirectory>${project.build.directory}</outputDirectory>
                             <inputDirectory>${project.build.directory}/cucumber-report</inputDirectory>

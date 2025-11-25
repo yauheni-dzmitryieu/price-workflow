@@ -1,0 +1,117 @@
+version: "3.8"
+
+services:
+  traefik:
+    image: traefik:v3.6.2
+    command:
+      - "--api.dashboard=true"
+      - "--api.insecure=true" # DEV only
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web.address=:80"
+
+      # ---- METRICS (Prometheus) ----
+      - "--metrics.prometheus=true"
+      - "--metrics.prometheus.entryPoint=metrics"
+      - "--entrypoints.metrics.address=:8082"
+    ports:
+      - "80:80"
+      - "8080:8080"      # Traefic dashboard
+      - "8082:8082"      # /metrics for Prometheus
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+    restart: unless-stopped
+    networks:
+      - web
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.traefik.rule=Host(`traefik.localhost`)"
+      - "traefik.http.routers.traefik.entrypoints=web"
+      - "traefik.http.routers.traefik.service=api@internal"
+
+  price-workflow:
+    image: price-workflow:latest
+    environment:
+      SPRING_PROFILES_ACTIVE: dev
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/pricingdb
+    deploy:
+      replicas: 2
+      restart_policy:
+        condition: on-failure
+    networks:
+      - web
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.price-workflow.rule=Host(`price-workflow.localhost`)"
+      - "traefik.http.routers.price-workflow.entrypoints=web"
+      - "traefik.http.services.price-workflow.loadbalancer.server.port=8087"
+      # ---- metrics ----
+      - "traefik.http.routers.price-metrics.rule=Path(`/actuator/prometheus`)"
+      - "traefik.http.routers.price-metrics.entrypoints=metrics"
+      - "traefik.http.services.price-metrics.loadbalancer.server.port=8087"
+
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8087/actuator/health" ]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+    restart: unless-stopped
+
+  postgres:
+    image: postgres:17.4
+    container_name: docker-postgres
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - ./data:/var/lib/postgresql/data
+      - ./init:/docker-entrypoint-initdb.d
+    ports:
+      - "5435:5432"
+    networks:
+      - web
+
+  # Metrics
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:latest
+    container_name: cadvisor
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:rw
+      - /var/run/docker.sock:/var/run/docker.sock:rw
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+      - /dev/disk/:/dev/disk:ro
+    ports:
+      - "8083:8080"
+    networks:
+      - web
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    ports:
+      - "9090:9090"
+    networks:
+      - web
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    ports:
+      - "3000:3000"
+    networks:
+      - web
+
+networks:
+  web:
+    external: false
