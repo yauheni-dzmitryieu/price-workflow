@@ -28,6 +28,13 @@ services:
       - "traefik.http.routers.traefik.rule=Host(`traefik.localhost`)"
       - "traefik.http.routers.traefik.entrypoints=web"
       - "traefik.http.routers.traefik.service=api@internal"
+      - "traefik.http.routers.traefik.entrypoints=metrics"
+
+      # Metrics for Prometheus (Service Discovery)
+      - "prometheus.enable=true"
+      - "prometheus.port=8087"
+      - "prometheus.path=/actuator/prometheus"
+      - "prometheus.job=price-workflow-app"
 
   price-workflow:
     image: price-workflow:latest
@@ -45,10 +52,11 @@ services:
       - "traefik.http.routers.price-workflow.rule=Host(`price-workflow.localhost`)"
       - "traefik.http.routers.price-workflow.entrypoints=web"
       - "traefik.http.services.price-workflow.loadbalancer.server.port=8087"
-      # ---- metrics ----
-      - "traefik.http.routers.price-metrics.rule=Path(`/actuator/prometheus`)"
-      - "traefik.http.routers.price-metrics.entrypoints=metrics"
-      - "traefik.http.services.price-metrics.loadbalancer.server.port=8087"
+      # metrics
+      - "prometheus.enable=true"
+      - "prometheus.job=price-workflow-app"
+      - "prometheus.port=8087"
+      - "prometheus.path=/actuator/prometheus"
 
     healthcheck:
       test: [ "CMD", "curl", "-f", "http://localhost:8087/actuator/health" ]
@@ -74,18 +82,31 @@ services:
       - web
 
   # Metrics
-  cadvisor:
-    image: gcr.io/cadvisor/cadvisor:latest
-    container_name: cadvisor
+#  cadvisor:
+#    image: gcr.io/cadvisor/cadvisor:latest
+#    container_name: cadvisor
+#    volumes:
+#      - /:/rootfs:ro
+#      - /var/run:/var/run:rw
+#      - /var/run/docker.sock:/var/run/docker.sock:rw
+#      - /sys:/sys:ro
+#      - /var/lib/docker/:/var/lib/docker:ro
+#      - /dev/disk/:/dev/disk:ro
+#    ports:
+#      - "8083:8080"
+#    networks:
+#      - web
+
+
+  socket-proxy:
+    image: tecnativa/docker-socket-proxy:latest
+    container_name: socket-proxy
     volumes:
-      - /:/rootfs:ro
-      - /var/run:/var/run:rw
-      - /var/run/docker.sock:/var/run/docker.sock:rw
-      - /sys:/sys:ro
-      - /var/lib/docker/:/var/lib/docker:ro
-      - /dev/disk/:/dev/disk:ro
-    ports:
-      - "8083:8080"
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    environment:
+      - CONTAINERS=1
+      - NETWORKS=1
+      - SERVICES=1
     networks:
       - web
 
@@ -96,10 +117,14 @@ services:
       - "--config.file=/etc/prometheus/prometheus.yml"
     volumes:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ./grafana/provisioning/:/etc/grafana/provisioning/
+      - ./grafana/dashboards/:/var/lib/grafana/dashboards/
     ports:
       - "9090:9090"
     networks:
       - web
+    depends_on:
+      - socket-proxy
 
   grafana:
     image: grafana/grafana:latest

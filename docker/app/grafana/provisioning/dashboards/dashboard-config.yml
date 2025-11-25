@@ -1,0 +1,5 @@
+providers:
+  - name: 'Application Dashboards'
+    type: file
+    options:
+      path: /var/lib/grafana/dashboards/
