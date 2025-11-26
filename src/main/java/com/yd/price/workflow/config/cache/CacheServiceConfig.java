@@ -48,7 +48,10 @@ public class CacheServiceConfig {
     }
 
     @Bean
-    @ConditionalOnBooleanProperty(prefix = "app.cache.l1", value = "enabled", havingValue = true)
+    @ConditionalOnBooleanProperties(value = {
+            @ConditionalOnBooleanProperty(prefix = "app.cache.l1", value = "enabled", havingValue = true),
+            @ConditionalOnBooleanProperty(prefix = "app.cache.l2", value = "enabled", havingValue = true)
+    })
     public L1RefreshCacheListener l1RefreshCacheListener(PriceAdjustmentCache priceAdjustmentCache) {
         return new L1RefreshCacheListener(redissonClient.orElse(null), priceAdjustmentCache);
     }
