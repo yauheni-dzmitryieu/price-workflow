@@ -1,6 +1,10 @@
 spring:
   profiles:
     active: dev
+  redis:
+    redisson:
+      file: classpath:redisson.yml
+
 
   datasource:
     url: jdbc:postgresql://localhost:5432/pricingdb
@@ -49,7 +53,7 @@ server:
 app:
   cache:
     l1:
-      enabled: false
+      enabled: true
       caches:
         product-cache:
           expire-after-write: 10m
@@ -58,7 +62,7 @@ app:
           expire-after-write: 10m
           maximum-size: 10_000
     l2:
-      enabled: false
+      enabled: true
       caches:
         product-cache:
           expire: 1d

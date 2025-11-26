@@ -5,6 +5,8 @@ import org.redisson.spring.starter.RedissonAutoConfigurationV2;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration;
+import org.springframework.boot.autoconfigure.data.redis.RedisReactiveAutoConfiguration;
+import org.springframework.boot.autoconfigure.data.redis.RedisRepositoriesAutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 
@@ -13,7 +15,8 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
 @EnableAspectJAutoProxy(proxyTargetClass = true)
 @SpringBootApplication(exclude = {
         RedisAutoConfiguration.class,
-        RedissonAutoConfigurationV2.class
+        RedisRepositoriesAutoConfiguration.class,
+//        RedissonAutoConfigurationV2.class
 })
 public class PriceWorkflowApp {
 

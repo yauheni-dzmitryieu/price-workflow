@@ -18,13 +18,13 @@
   - [X] Wrap requests
 - [X] Add requestId /...
 - [ ] Prometheus 
-  - [ ] Add to docker-compose
+  - [X] Add to docker-compose
   - [ ] Configure dashboards
 - [ ] Add logs
   - [X] Add log configuration
   - [X] Add exception handler
 - [ ] Adjust logic to allow work stable in case Redis connection failed
-- [ ] Add app to docker-compose with 2 replica
+- [X] Add app to docker-compose with 2 replica
 - [ ] Update performance tests
 - [ ] Unit tests
 - [ ] Integration tests
