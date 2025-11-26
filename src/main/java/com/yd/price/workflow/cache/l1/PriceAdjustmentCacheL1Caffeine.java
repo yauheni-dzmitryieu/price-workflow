@@ -46,6 +46,13 @@ public class PriceAdjustmentCacheL1Caffeine implements PriceAdjustmentCache {
         return source.size();
     }
 
+    /**
+     * Discards any cached value for the {@code productId}. The behavior of this operation is undefined for
+     * an entry that is being loaded (or reloaded) and is otherwise not present.
+     *
+     * @param productId the key whose mapping is to be removed from the cache
+     * @throws NullPointerException if the specified key is null
+     */
     @Override
     public void evict(Long productId) {
         cache.invalidate(productId);
