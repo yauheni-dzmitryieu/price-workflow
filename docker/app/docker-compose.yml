@@ -48,7 +48,6 @@ services:
         condition: on-failure
     networks:
       - web
-      - redis-net
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.price-workflow.rule=Host(`price-workflow.localhost`)"
@@ -144,15 +143,14 @@ services:
         "--repl-diskless-load",
         "on-empty-db",
         "--replica-announce-ip",
-        "172.21.0.3", # Используем внутренний IP
+        "localhost",
         "--replica-announce-port",
-        "6379",       # Используем внутренний порт
+        "6379",
         "--protected-mode",
         "no"
       ]
     networks:
-      redis-net:
-        ipv4_address: 172.21.0.3
+      - web
 
 
   redis-slave-1:
@@ -176,15 +174,14 @@ services:
         "--repl-diskless-load",
         "on-empty-db",
         "--replica-announce-ip",
-        "172.21.0.4", # Используем внутренний IP
+        "localhost",
         "--replica-announce-port",
-        "6379",       # Используем внутренний порт
+        "6379",
         "--protected-mode",
         "no"
       ]
     networks:
-      redis-net:
-        ipv4_address: 172.21.0.4
+      - web
 
 
   redis-slave-2:
@@ -208,15 +205,14 @@ services:
         "--repl-diskless-load",
         "on-empty-db",
         "--replica-announce-ip",
-        "172.21.0.5", # Используем внутренний IP
+        "localhost",
         "--replica-announce-port",
-        "6379",       # Используем внутренний порт
+        "6379",
         "--protected-mode",
         "no"
       ]
     networks:
-      redis-net:
-        ipv4_address: 172.21.0.5
+      - web
 
 
   sentinel-1:
@@ -236,8 +232,7 @@ services:
             echo "sentinel parallel-syncs mymaster 1" >> /etc/sentinel.conf &&
             redis-sentinel /etc/sentinel.conf'
     networks:
-      redis-net:
-        ipv4_address: 172.21.0.6
+      - web
 
 
   sentinel-2:
@@ -257,8 +252,7 @@ services:
             echo "sentinel parallel-syncs mymaster 1" >> /etc/sentinel.conf &&
             redis-sentinel /etc/sentinel.conf'
     networks:
-      redis-net:
-        ipv4_address: 172.21.0.7
+      - web
 
   sentinel-3:
     image: redis:latest
@@ -277,15 +271,9 @@ services:
             echo "sentinel parallel-syncs mymaster 1" >> /etc/sentinel.conf &&
             redis-sentinel /etc/sentinel.conf'
     networks:
-      redis-net:
-        ipv4_address: 172.21.0.8
+      - web
 
 
 networks:
   web:
     external: false
-  redis-net:
-    driver: bridge
-    ipam:
-      config:
-        - subnet: 172.21.0.0/16
