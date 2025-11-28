@@ -27,9 +27,4 @@ public class ProductServiceImpl implements ProductService {
         }
         return product;
     }
-
-    @Override
-    public void save(ProductBasePriceView productPrice) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
 }

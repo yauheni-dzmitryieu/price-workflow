@@ -18,7 +18,4 @@ public interface PriceAdjustmentCache {
 
     void evict(Long productId);
 
-    default PriceAdjustmentCache getL1() {
-        return null;
-    }
 }

@@ -47,7 +47,7 @@ public class AdminPriceAdjustmentController implements AdminPriceAdjustmentApi {
             @Validated @RequestBody PriceAdjustmentRequest priceAdjustmentRequest) {
 
         var entity = converterToEntity.convert(priceAdjustmentRequest);
-        var result = service.addToProduct(productId, entity);
+        var result = service.save(productId, entity);
 
         return ResponseEntity.ok(converterFromEntity.convert(result));
     }

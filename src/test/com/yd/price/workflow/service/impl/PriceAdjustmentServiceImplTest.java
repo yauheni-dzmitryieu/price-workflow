@@ -3,6 +3,7 @@ package com.yd.price.workflow.service.impl;
 import com.yd.price.workflow.db.entity.PriceAdjustment;
 import com.yd.price.workflow.db.entity.PriceAdjustmentMode;
 import com.yd.price.workflow.db.repository.PriceAdjustmentMapper;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -17,13 +18,26 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class PriceAdjustmentServiceImplTest {
+
     private static final Long PRODUCT_ID = 1L;
 
     @Mock
     private PriceAdjustmentMapper mapper;
 
+
     @InjectMocks
-    private PriceAdjustmentServiceImpl priceAdjustmentService;
+    private PriceAdjustmentServiceImpl service;
+
+    @Test
+    void testConstructor() {
+        //When
+        Throwable throwable = Assertions.catchThrowable(() -> new PriceAdjustmentServiceImpl(null));
+
+        //Then
+        assertThat(throwable)
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("PriceAdjustmentMapper is required");
+    }
 
     @Test
     void testAddToProduct() {
@@ -32,7 +46,7 @@ class PriceAdjustmentServiceImplTest {
         when(mapper.create(priceAdjustment)).thenReturn(1);
 
         //When
-        PriceAdjustment savedPriceAdjustment = priceAdjustmentService.addToProduct(PRODUCT_ID, priceAdjustment);
+        PriceAdjustment savedPriceAdjustment = service.save(PRODUCT_ID, priceAdjustment);
 
         //Then
         assertThat(savedPriceAdjustment).isEqualTo(priceAdjustment);
@@ -45,7 +59,7 @@ class PriceAdjustmentServiceImplTest {
         when(mapper.findAllByProductId(PRODUCT_ID)).thenReturn(expectedPA);
 
         //When
-        Set<PriceAdjustment> priceAdjustments = priceAdjustmentService.getAll(PRODUCT_ID);
+        Set<PriceAdjustment> priceAdjustments = service.getAll(PRODUCT_ID);
 
         //Then
         assertThat(priceAdjustments)

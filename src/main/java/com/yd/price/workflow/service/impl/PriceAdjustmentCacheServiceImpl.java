@@ -29,63 +29,61 @@ public class PriceAdjustmentCacheServiceImpl implements PriceAdjustmentService {
 
     @Override
     @Transactional
-    public PriceAdjustment addToProduct(Long productId, PriceAdjustment priceAdjustment) {
-        priceAdjustmentService.addToProduct(productId, priceAdjustment);
+    public PriceAdjustment save(Long productId, PriceAdjustment priceAdjustment) {
+        priceAdjustmentService.save(productId, priceAdjustment);
 
-        if (TransactionSynchronizationManager.isActualTransactionActive()) {
-            TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
-
-                @Override
-                public void afterCommit() {
-                    priceAdjustmentCache.put(productId, priceAdjustment);
-                    log.info("Cache: Price Adjustment added to product: {} in cache with id: {}", productId, priceAdjustment.getId());
-                }
-
-                @Override
-                public void afterCompletion(int status) {
-                    if (status == TransactionSynchronization.STATUS_ROLLED_BACK) {
-                        log.warn("Cache: Transaction was rolled back. Adding data to cache for productId: {} was skipped.", productId);
-                    }
-                }
-            });
-        }
-
+        this.registerSynchronization(new PriceAdjustmentCacheServiceImpl.SaveAfterCommit(productId, priceAdjustment));
         return priceAdjustment;
     }
 
     @Override
     public Set<PriceAdjustment> getAll(Long productId) {
+        log.debug("Fetching all price adjustments for productId={}", productId);
+
         Set<PriceAdjustment> cachedPriceAdjustments = priceAdjustmentCache.getAll(productId);
         if (!CollectionUtils.isEmpty(cachedPriceAdjustments)) {
+            log.info("Cache HIT for productId={} ({} items)", productId, cachedPriceAdjustments.size());
             return cachedPriceAdjustments;
         }
 
+        log.info("Cache MISS for productId={}. Loading from DB…", productId);
         Set<PriceAdjustment> priceAdjustments = priceAdjustmentService.getAll(productId);
-        this.saveAll(productId, priceAdjustments);
+
+        if (!CollectionUtils.isEmpty(priceAdjustments)) {
+            log.debug("Caching {} price adjustments for productId={}", priceAdjustments.size(), productId);
+            priceAdjustmentCache.addAll(productId, priceAdjustments);
+        } else {
+            log.debug("No price adjustments found in DB for productId={}", productId);
+        }
 
         return cachedPriceAdjustments;
     }
 
-    @Override
-    public void saveAll(Long productId, Set<PriceAdjustment> priceAdjustments) {
-        if (TransactionSynchronizationManager.isActualTransactionActive()) {
-            TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
+    void registerSynchronization(TransactionSynchronization synchronization) {
+        TransactionSynchronizationManager.registerSynchronization(synchronization);
+    }
 
-                @Override
-                public void afterCommit() {
-                    priceAdjustmentCache.addAll(productId, priceAdjustments);
-                    log.info("Cache: Price Adjustment added to product: {} in cache", productId);
-                }
+    class SaveAfterCommit implements TransactionSynchronization {
+        private final Long productId;
+        private final PriceAdjustment priceAdjustment;
 
-                @Override
-                public void afterCompletion(int status) {
-                    if (status == TransactionSynchronization.STATUS_ROLLED_BACK) {
-                        log.warn("Cache: Transaction was rolled back. Adding data to cache for productId: {} was skipped.", productId);
-                    }
-                }
-            });
-        } else {
-            priceAdjustmentCache.addAll(productId, priceAdjustments);
+        public SaveAfterCommit(Long productId, PriceAdjustment priceAdjustment) {
+            this.productId = productId;
+            this.priceAdjustment = priceAdjustment;
+        }
+
+        @Override
+        public void afterCommit() {
+            priceAdjustmentCache.put(productId, priceAdjustment);
+            log.info("Cache: Price Adjustment added to product: {} in cache with id: {}", productId, priceAdjustment.getId());
+        }
+
+        @Override
+        public void afterCompletion(int status) {
+            if (status == TransactionSynchronization.STATUS_ROLLED_BACK) {
+                log.warn("Cache: Transaction was rolled back. Adding data to cache for productId: {} was skipped.", productId);
+            }
         }
     }
+
 }

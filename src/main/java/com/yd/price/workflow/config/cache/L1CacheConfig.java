@@ -12,6 +12,7 @@ import com.yd.price.workflow.db.entity.PriceAdjustment;
 import com.yd.price.workflow.db.entity.view.ProductBasePriceView;
 import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBooleanProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -28,7 +29,7 @@ public class L1CacheConfig {
 
     @Bean
     public Cache<Long, Set<PriceAdjustment>> priceAdjustmentL1Cache() {
-        CacheProperties.L1.Parameters parameters = cacheProperties.getL1().getCaches().get(CacheProperties.CacheName.PRICE_ADJUSTMENT_CACHE);
+        CacheProperties.L1.Parameters parameters = getCacheParameters(CacheProperties.CacheName.PRICE_ADJUSTMENT_CACHE);
         return Caffeine.newBuilder()
                 .maximumSize(parameters.getMaximumSize())
                 .expireAfterWrite(parameters.getExpireAfterWrite())
@@ -37,11 +38,15 @@ public class L1CacheConfig {
 
     @Bean
     public Cache<Long, ProductBasePriceView> productL1Cache() {
-        CacheProperties.L1.Parameters parameters = cacheProperties.getL1().getCaches().get(CacheProperties.CacheName.PRODUCT_CACHE);
+        CacheProperties.L1.Parameters parameters = getCacheParameters(CacheProperties.CacheName.PRODUCT_CACHE);
         return Caffeine.newBuilder()
                 .maximumSize(parameters.getMaximumSize())
                 .expireAfterWrite(parameters.getExpireAfterWrite())
                 .build();
+    }
+
+    private CacheProperties.L1.Parameters getCacheParameters(CacheProperties.CacheName productCache) {
+        return cacheProperties.getL1().getCaches().get(productCache);
     }
 
     @Bean
@@ -63,7 +68,8 @@ public class L1CacheConfig {
 
     @Bean
     @ConditionalOnBooleanProperty(prefix = "app.cache.l2", value = "enabled", havingValue = true)
-    public L1RefreshCacheListener l1RefreshCacheListener(Optional<RedissonClient> redissonClient, PriceAdjustmentCache priceAdjustmentCache) {
+    public L1RefreshCacheListener l1RefreshCacheListener(Optional<RedissonClient> redissonClient,
+                                                         @Qualifier("l1PriceAdjustmentCache") PriceAdjustmentCache priceAdjustmentCache) {
         return new L1RefreshCacheListener(redissonClient.orElse(null), priceAdjustmentCache);
     }
 

@@ -24,7 +24,7 @@ public class PriceAdjustmentServiceImpl implements PriceAdjustmentService {
 
     @Override
     @Transactional
-    public PriceAdjustment addToProduct(Long productId, PriceAdjustment priceAdjustment) {
+    public PriceAdjustment save(Long productId, PriceAdjustment priceAdjustment) {
         mapper.create(priceAdjustment);
         log.debug("DB: Price Adjustment added to product: {} with id: {}", productId, priceAdjustment.getId());
 

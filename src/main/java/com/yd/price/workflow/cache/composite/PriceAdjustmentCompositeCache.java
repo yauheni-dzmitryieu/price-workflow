@@ -37,7 +37,6 @@ public class PriceAdjustmentCompositeCache implements PriceAdjustmentCache {
     @Override
     public void put(Long productId, PriceAdjustment value) {
         l2Redis.put(productId, value);
-
         l1Caffeine.put(productId, value);
 
         publisher.publishRefresh(value);
@@ -61,10 +60,5 @@ public class PriceAdjustmentCompositeCache implements PriceAdjustmentCache {
         l2Redis.evict(productId);
 
         publisher.publishEvict(productId);
-    }
-
-    @Override
-    public PriceAdjustmentCache getL1() {
-        return this.l1Caffeine;
     }
 }

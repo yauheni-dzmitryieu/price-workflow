@@ -31,9 +31,6 @@ public class ProductCompositeCache implements ProductCache {
     @Override
     public void put(ProductBasePriceView productBasePriceView) {
         l2Redis.put(productBasePriceView);
-
         l1Caffeine.put(productBasePriceView);
-
-        //TODO publish refresh
     }
 }

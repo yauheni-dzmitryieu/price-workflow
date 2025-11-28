@@ -30,30 +30,7 @@ public class ProductCacheServiceImpl implements ProductService {
         }
 
         product = productService.getProductPrice(productId);
-        this.save(product);
+        productCache.put(product);
         return product;
-    }
-
-    @Override
-    public void save(ProductBasePriceView productPrice) {
-        if (TransactionSynchronizationManager.isActualTransactionActive()) {
-            TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
-
-                @Override
-                public void afterCommit() {
-                    productCache.put(productPrice);
-                    log.info("Cache: Product saved to cache with id: {}", productPrice.id());
-                }
-
-                @Override
-                public void afterCompletion(int status) {
-                    if (status == TransactionSynchronization.STATUS_ROLLED_BACK) {
-                        log.warn("Cache: Transaction was rolled back. Adding data to cache for productId: {} was skipped.", productPrice.id());
-                    }
-                }
-            });
-        } else {
-            productCache.put(productPrice);
-        }
     }
 }
