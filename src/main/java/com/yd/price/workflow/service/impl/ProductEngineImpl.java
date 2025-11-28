@@ -43,7 +43,7 @@ public class ProductEngineImpl implements ProductEngine {
                 switch (adjustment.getMode()) {
                     case ABSOLUTE -> finalPrice = finalPrice.add(adjustment.getValue());
                     case PERCENT -> {
-                        BigDecimal multiply = basePrice.multiply(adjustment.getValue());
+                        BigDecimal multiply = basePrice.multiply(adjustment.getValue()).divide(new BigDecimal(100));
                         finalPrice = finalPrice.add(multiply);
                     }
                 }

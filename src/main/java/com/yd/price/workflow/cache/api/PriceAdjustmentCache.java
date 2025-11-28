@@ -17,4 +17,8 @@ public interface PriceAdjustmentCache {
     int addAll(Long productId, Set<PriceAdjustment> source);
 
     void evict(Long productId);
+
+    default PriceAdjustmentCache getL1() {
+        return null;
+    }
 }

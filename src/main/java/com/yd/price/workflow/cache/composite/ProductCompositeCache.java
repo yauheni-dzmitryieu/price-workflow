@@ -1,18 +1,13 @@
 package com.yd.price.workflow.cache.composite;
 
 import com.yd.price.workflow.cache.api.ProductCache;
-import com.yd.price.workflow.cache.l1.ProductCacheL1Caffeine;
-import com.yd.price.workflow.cache.l2.ProductCacheL2Redis;
 import com.yd.price.workflow.db.entity.view.ProductBasePriceView;
 
 public class ProductCompositeCache implements ProductCache {
+    private final ProductCache l1Caffeine;
+    private final ProductCache l2Redis;
 
-    private final ProductCacheL1Caffeine l1Caffeine;
-    private final ProductCacheL2Redis l2Redis;
-    //TODO add publisher in case implementing adding product
-
-
-    public ProductCompositeCache(ProductCacheL1Caffeine l1Caffeine, ProductCacheL2Redis l2Redis) {
+    public ProductCompositeCache(ProductCache l1Caffeine, ProductCache l2Redis) {
         this.l1Caffeine = l1Caffeine;
         this.l2Redis = l2Redis;
     }

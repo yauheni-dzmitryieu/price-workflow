@@ -20,7 +20,7 @@ public class L1RefreshCacheListener {
         Assert.notNull(redisson, "redisson must not be null");
         Assert.notNull(l1, "l1 must not be null");
 
-        this.l1 = l1;
+        this.l1 = l1.getL1();
         this.redisson = redisson;
     }
 

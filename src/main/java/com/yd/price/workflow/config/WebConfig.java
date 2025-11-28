@@ -1,6 +1,8 @@
 package com.yd.price.workflow.config;
 
 import com.yd.price.workflow.rest.filter.CorrelationIdFilter;
+import io.micrometer.core.aop.TimedAspect;
+import io.micrometer.core.instrument.MeterRegistry;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -27,5 +29,10 @@ public class WebConfig {
         bean.addUrlPatterns("/*");
         bean.setOrder(1);
         return bean;
+    }
+
+    @Bean
+    public TimedAspect timedAspect(MeterRegistry meterRegistry) {
+        return new TimedAspect(meterRegistry);
     }
 }

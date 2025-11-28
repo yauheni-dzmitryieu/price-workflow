@@ -1,8 +1,6 @@
 package com.yd.price.workflow.cache.composite;
 
 import com.yd.price.workflow.cache.api.PriceAdjustmentCache;
-import com.yd.price.workflow.cache.l1.PriceAdjustmentCacheL1Caffeine;
-import com.yd.price.workflow.cache.l2.PriceAdjustmentCacheL2Redis;
 import com.yd.price.workflow.cache.sync.CacheInvalidationPublisher;
 import com.yd.price.workflow.db.entity.PriceAdjustment;
 import org.springframework.util.CollectionUtils;
@@ -10,11 +8,11 @@ import org.springframework.util.CollectionUtils;
 import java.util.Set;
 
 public class PriceAdjustmentCompositeCache implements PriceAdjustmentCache {
-    private final PriceAdjustmentCacheL1Caffeine l1Caffeine;
-    private final PriceAdjustmentCacheL2Redis l2Redis;
+    private final PriceAdjustmentCache l1Caffeine;
+    private final PriceAdjustmentCache l2Redis;
     private final CacheInvalidationPublisher publisher; //TODO replace use interfaces + qualifiers
 
-    public PriceAdjustmentCompositeCache(PriceAdjustmentCacheL1Caffeine l1Caffeine, PriceAdjustmentCacheL2Redis l2Redis, CacheInvalidationPublisher publisher) {
+    public PriceAdjustmentCompositeCache(PriceAdjustmentCache l1Caffeine, PriceAdjustmentCache l2Redis, CacheInvalidationPublisher publisher) {
         this.l1Caffeine = l1Caffeine;
         this.l2Redis = l2Redis;
         this.publisher = publisher;
@@ -63,5 +61,10 @@ public class PriceAdjustmentCompositeCache implements PriceAdjustmentCache {
         l2Redis.evict(productId);
 
         publisher.publishEvict(productId);
+    }
+
+    @Override
+    public PriceAdjustmentCache getL1() {
+        return this.l1Caffeine;
     }
 }

@@ -75,7 +75,7 @@ class ProductEngineImplTest {
         // Given
         Set<PriceAdjustment> adjustments = Set.of(
                 new PriceAdjustment(PriceAdjustmentMode.ABSOLUTE, new BigDecimal("20.00")),
-                new PriceAdjustment(PriceAdjustmentMode.PERCENT, new BigDecimal("0.5")),
+                new PriceAdjustment(PriceAdjustmentMode.PERCENT, new BigDecimal("50")),
                 new PriceAdjustment(PriceAdjustmentMode.ABSOLUTE, new BigDecimal("10.00"))
         );
         BigDecimal expectedFinalPrice = new BigDecimal("180.00");
