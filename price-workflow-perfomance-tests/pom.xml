@@ -80,9 +80,6 @@
                 <groupId>io.gatling</groupId>
                 <artifactId>gatling-maven-plugin</artifactId>
                 <version>4.20.8</version>
-                <configuration>
-                    <simulationClass>com.yd.PriceGetSimulation</simulationClass>
-                </configuration>
             </plugin>
         </plugins>
     </build>

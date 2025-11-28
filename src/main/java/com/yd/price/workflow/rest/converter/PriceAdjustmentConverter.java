@@ -7,11 +7,10 @@ import com.yd.price.workflow.rest.dto.PriceAdjustmentRequest;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Component
-public class PriceAdjustmentConverter implements Converter<PriceAdjustmentRequest,PriceAdjustment> {
+public class PriceAdjustmentConverter implements Converter<PriceAdjustmentRequest, PriceAdjustment> {
 
     @Override
     public PriceAdjustment convert(final PriceAdjustmentRequest source) {

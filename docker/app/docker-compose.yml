@@ -40,7 +40,7 @@ services:
     image: price-workflow:latest
     environment:
       SPRING_PROFILES_ACTIVE: dev
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/pricingdb
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/postgres
      # SENTINEL_ADDRESSES: '["redis://sentinel-1:26379", "redis://sentinel-2:26379", "redis://sentinel-3:26379"]'
     deploy:
       replicas: 2
@@ -79,7 +79,7 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
     volumes:
-      - ./data:/var/lib/postgresql/data
+     # - ./data:/var/lib/postgresql/data
       - ./init:/docker-entrypoint-initdb.d
     ports:
       - "5435:5432"

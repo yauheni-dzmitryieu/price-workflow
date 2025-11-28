@@ -1,5 +1,3 @@
-CREATE DATABASE pricingdb OWNER postgres;
-
 CREATE TYPE price_adjustment_type AS ENUM ('PROMO', 'TAX', 'FEE');
 CREATE TYPE price_adjustment_mode AS ENUM ('ABSOLUTE', 'PERCENT');
 
