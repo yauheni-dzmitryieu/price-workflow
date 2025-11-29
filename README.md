@@ -1,3 +1,33 @@
+# Price-workflow
+
+## About The Project
+TBD
+
+## 📋 Table of Contents
+
+- [Getting Started](documents/GETTING_STARTED.md) - Instruction project up and running on your local machine for
+  development and testing purposes.
+- [Project Architecture](documents/PROJECT_ACRHITECTURE.md) - Height level project architecture
+- [Performance Test result]
+- [Known Limitation and Improvements](documents/Limitation%20and%20Improvements.md)
+- [Application Configuration Reference](documents/APPLICATION_CONFIGURATION_REFERENCE.md)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # price-workflow
 
 # Tasks
