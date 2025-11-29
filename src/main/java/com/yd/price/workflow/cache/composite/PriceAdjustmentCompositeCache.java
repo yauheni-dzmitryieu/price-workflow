@@ -1,6 +1,7 @@
 package com.yd.price.workflow.cache.composite;
 
 import com.yd.price.workflow.cache.api.PriceAdjustmentCache;
+import com.yd.price.workflow.cache.health.RedisConnectionHolder;
 import com.yd.price.workflow.cache.sync.CacheInvalidationPublisher;
 import com.yd.price.workflow.db.entity.PriceAdjustment;
 import org.springframework.util.CollectionUtils;
@@ -11,15 +12,23 @@ public class PriceAdjustmentCompositeCache implements PriceAdjustmentCache {
     private final PriceAdjustmentCache l1Caffeine;
     private final PriceAdjustmentCache l2Redis;
     private final CacheInvalidationPublisher publisher; //TODO replace use interfaces + qualifiers
+    private final RedisConnectionHolder redisConnectionHolder;
 
-    public PriceAdjustmentCompositeCache(PriceAdjustmentCache l1Caffeine, PriceAdjustmentCache l2Redis, CacheInvalidationPublisher publisher) {
+    public PriceAdjustmentCompositeCache(PriceAdjustmentCache l1Caffeine, PriceAdjustmentCache l2Redis,
+                                         CacheInvalidationPublisher publisher,
+                                         RedisConnectionHolder redisConnectionHolder) {
         this.l1Caffeine = l1Caffeine;
         this.l2Redis = l2Redis;
         this.publisher = publisher;
+        this.redisConnectionHolder = redisConnectionHolder;
     }
 
     @Override
     public Set<PriceAdjustment> getAll(Long productId) {
+        if (!redisConnectionHolder.isAvailable()) {
+            return null;
+        }
+
         Set<PriceAdjustment> l1PriceAdjustments = l1Caffeine.getAll(productId);
         if (!CollectionUtils.isEmpty(l1PriceAdjustments)) {
             return l1PriceAdjustments;

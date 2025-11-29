@@ -26,7 +26,7 @@
 - [ ] Adjust logic to allow work stable in case Redis connection failed
 - [X] Add app to docker-compose with 2 replica
 - [ ] Update performance tests
-- [ ] Unit tests
+- [X] Unit tests
 - [ ] Integration tests
 - [ ] Documentations
   - [X] API docs 

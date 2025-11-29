@@ -4,6 +4,7 @@ import com.yd.price.workflow.cache.api.PriceAdjustmentCache;
 import com.yd.price.workflow.cache.api.ProductCache;
 import com.yd.price.workflow.cache.composite.PriceAdjustmentCompositeCache;
 import com.yd.price.workflow.cache.composite.ProductCompositeCache;
+import com.yd.price.workflow.cache.health.RedisConnectionHolder;
 import com.yd.price.workflow.cache.sync.CacheInvalidationPublisher;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBooleanProperties;
@@ -24,9 +25,10 @@ public class CompositeCacheConfig {
     public PriceAdjustmentCache compositePriceAdjustmentCache(
             @Qualifier("l1PriceAdjustmentCache") PriceAdjustmentCache l1,
             @Qualifier("l2PriceAdjustmentCache") PriceAdjustmentCache l2,
-            CacheInvalidationPublisher publisher
+            CacheInvalidationPublisher publisher,
+            RedisConnectionHolder holder
     ) {
-        return new PriceAdjustmentCompositeCache(l1, l2, publisher);
+        return new PriceAdjustmentCompositeCache(l1, l2, publisher, holder);
     }
 
     @Bean

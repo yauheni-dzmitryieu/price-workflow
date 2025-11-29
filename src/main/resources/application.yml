@@ -10,6 +10,7 @@ spring:
     url: jdbc:postgresql://localhost:5432/postgres
     username: postgres
     password: postgres
+    driver-class-name: org.postgresql.Driver
   flyway:
     enabled: true
     locations: classpath:db/migration
@@ -63,6 +64,7 @@ app:
           maximum-size: 10_000
     l2:
       enabled: true
+      scheduler-health-check-fixed-rate: 1
       caches:
         product-cache:
           expire: 1d
