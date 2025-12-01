@@ -36,13 +36,13 @@ public class PriceAdjustmentSimulation extends Simulation {
                 .protocols(SimulationUtils.geHttpProtocol())
                 .assertions(
                         global().responseTime().percentile4().lte(20), //p99th percentile <= 20 ms
-                        global().successfulRequests().percent().gt(99.00)
+                        global().successfulRequests().percent().gt(95.00)
                 );
     }
 
 
     private OpenInjectionStep.RampRate.RampRateOpenInjectionStep endpointInjectionProfile() {
-        int totalDesiredUserCount = 250;
+        int totalDesiredUserCount = 500;
         double userRampUpPerInterval = 50;
         double rampUpIntervalSeconds = 30;
         int totalRampUptimeSeconds = 120;

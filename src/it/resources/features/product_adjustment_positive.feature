@@ -1,4 +1,4 @@
-Feature: Test feature Hello World
+Feature: Test feature adding price adjustment
 
   Scenario Outline: Add new product adjustment for exist product
     When PW: send request to add prise adjustment for product with id [<PRODUCT_ID>]

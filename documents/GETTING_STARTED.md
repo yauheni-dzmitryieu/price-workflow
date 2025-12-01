@@ -2,13 +2,17 @@
 
 ## Environment setup
 1. Install [Amazon Corretto JDK 21.0.9.11.1](https://github.com/corretto/corretto-21/releases/tag/21.0.9.11.1)
+2. Install [Docker](https://docs.docker.com/get-started/introduction/get-docker-desktop/)
+   * [docker-compose](https://docs.docker.com/compose/install/)
+   * [docker swarm](https://docs.docker.com/engine/swarm/swarm-tutorial/)
+3. [Maven 3.9.3](https://maven.apache.org/docs/3.9.3/release-notes.html)
 
 If you have several versions of java on your computer, we recommend using [jEnv](https://www.jenv.be/) for convenient
 management among projects.
 
 ## Project setup
 1. Set *JAVA_HOME* variable with *Amazon Corretto JDK 21.0.9.11.1* in the project root.
-2. Build project -> `mvn clean install`
+2. Build project -> `mvn clean install` (By default integration tests skipped from build part)
 3. Build docker image:
 ```shell
 docker build -t price-workflow:latest .   
@@ -32,3 +36,16 @@ docker-compose contains following services:
 * [Prometheus](https://prometheus.io/) available by following address [http://localhost:9090](http://localhost:9090)
 * [Grafana](https://grafana.com/) available by following address [http://localhost:3000](http://localhost:3000)
 * [Redis](https://redis.io/downloads/) connection address `jdbc:redis://localhost:6379/0`
+
+### Grafana configuration (while it has not autoconfiguration)
+1. Got to `http://localhost:3000`
+2. Create new admin user f.e with username and password: admin
+3. Go to connection / datasource `http://localhost:3000/connections/datasources`
+4. Click Add new data source 
+5. Find Prometheus and click to it
+6. In **Connection** section enter `http://prometheus:9090`
+7. Click **save & test**
+8. To see available metrics go to **Home > Drilldown > Metrics > All metrics** `http://localhost:3000/a/grafana-metricsdrilldown-app/drilldown?layout=grid&filters-rule=&filters-prefix=&filters-suffix=&from=now-1h&to=now&timezone=browser&var-ds=bf5tm1obp1q80f&var-metrics_filters=&var-filters=&var-labelsWingman=&search_txt=&var-metrics-reducer-sort-by=default&filters-recent=&var-other_metric_filters=`
+
+#### Sample
+![](./images/metric_sample.png)

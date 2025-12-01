@@ -1,6 +1,7 @@
 package com.yd.price.workflow.cache.composite;
 
 import com.yd.price.workflow.cache.api.ProductCache;
+import com.yd.price.workflow.cache.health.RedisConnectionHolder;
 import com.yd.price.workflow.db.entity.view.ProductBasePriceView;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,6 +14,7 @@ import java.math.BigDecimal;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.inOrder;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
@@ -28,11 +30,14 @@ class ProductCompositeCacheTest {
     @Mock(name = "l2Cache")
     private ProductCache l2Cache;
 
+    @Mock
+    private RedisConnectionHolder redisConnectionHolder;
+
     private ProductCompositeCache cache;
 
     @BeforeEach
     void setUp() {
-        this.cache = new ProductCompositeCache(l1Cache, l2Cache);
+        this.cache = new ProductCompositeCache(l1Cache, l2Cache, redisConnectionHolder);
     }
 
     @Test

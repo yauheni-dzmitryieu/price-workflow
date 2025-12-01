@@ -35,7 +35,8 @@ public class CompositeCacheConfig {
     @Primary
     public ProductCache compositeProductCache(
             @Qualifier("l1productCache") ProductCache l1,
-            @Qualifier("l2ProductCache") ProductCache l2) {
-        return new ProductCompositeCache(l1, l2);
+            @Qualifier("l2ProductCache") ProductCache l2,
+            RedisConnectionHolder holder) {
+        return new ProductCompositeCache(l1, l2, holder);
     }
 }

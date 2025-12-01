@@ -27,6 +27,9 @@
         <common.lang.version>3.18.0</common.lang.version>
         <mybatis.spring.boot.starter.version>3.0.5</mybatis.spring.boot.starter.version>
         <springdoc.openapi.starter.webmvc.ui>2.8.2</springdoc.openapi.starter.webmvc.ui>
+        <reddison.version>3.52.0</reddison.version>
+        <caffeine.version>3.1.8</caffeine.version>
+        <logstash-logback-encoder.version>7.4</logstash-logback-encoder.version>
 
         <!--Tests -->
         <junit-platform-suite.version>1.12.2</junit-platform-suite.version>
@@ -90,7 +93,7 @@
         <dependency>
             <groupId>net.logstash.logback</groupId>
             <artifactId>logstash-logback-encoder</artifactId>
-            <version>7.4</version>
+            <version>${logstash-logback-encoder.version}</version>
         </dependency>
 
         <dependency>
@@ -107,12 +110,12 @@
         <dependency>
             <groupId>org.redisson</groupId>
             <artifactId>redisson-spring-boot-starter</artifactId>
-            <version>3.52.0</version>
+            <version>${reddison.version}</version>
         </dependency>
         <dependency>
             <groupId>com.github.ben-manes.caffeine</groupId>
             <artifactId>caffeine</artifactId>
-            <version>3.1.8</version>
+            <version>${caffeine.version}</version>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.datatype</groupId>

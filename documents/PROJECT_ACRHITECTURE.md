@@ -1,6 +1,22 @@
 # Project Architecture
+<!-- TOC -->
+* [Project Architecture](#project-architecture)
+  * [Write data flow (Write through* strategy)](#write-data-flow-write-through-strategy)
+  * [Get data flow](#get-data-flow)
+    * [Read from Caches(L1, L2) + L1 data missed](#read-from-cachesl1-l2--l1-data-missed-)
+    * [Read from Caches(L1, L2) and DB if data missed](#read-from-cachesl1-l2-and-db-if-data-missed)
+  * [Infrastructure](#infrastructure)
+    * [Redis](#redis-)
+      * [Sentinel-Based Discovery](#sentinel-based-discovery)
+      * [Failover Handling](#failover-handling)
+    * [Monitoring](#monitoring)
+    * [Application Layer](#application-layer)
+<!-- TOC -->
+
 ## Write data flow (Write through* strategy)
 ![](./images/write_to_cache.png)
+ 
+Steps 3 and 4 won’t be executed if the data isn’t saved to the database.
 
 ## Get data flow
 ### Read from Caches(L1, L2) + L1 data missed 
@@ -77,4 +93,26 @@ If the master becomes unavailable:
                                          │
                                          ▼
                                   Handled by Traefik
+```
+
+## Database Schema
+```mermaid
+erDiagram
+    PRODUCT ||--o{ PRICE_ADJUSTMENT: "has"
+
+    PRODUCT {
+        id bigserial PK "Primary Key"
+        sku varchar_64 "Unique Stock Keeping Unit"
+        name varchar_255 "Product Name"
+        base_price numeric_19_2 "Base Price"
+    }
+
+    PRICE_ADJUSTMENT {
+        id bigserial PK "Primary Key"
+        product_id bigint FK "FK to PRODUCT (ON DELETE CASCADE)"
+        type price_adjustment_type "PROMO, TAX, or FEE"
+        value numeric_19_2 "Adjustment value"
+        price_adjustment_mode mode "ABSOLUTE or PERCENT"
+        updated_at timestamp "Time of last update"
+    }
 ```

@@ -14,6 +14,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class RedisConnectionHolder {
     private final AtomicBoolean available = new AtomicBoolean(true);
 
+    //TODO add check for each L2 operation
     /**
      * Returns whether Redis is currently considered available.
      *

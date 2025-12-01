@@ -65,7 +65,7 @@ public class PriceGetSimulation extends Simulation {
     }
 
     private OpenInjectionStep.RampRate.RampRateOpenInjectionStep endpointInjectionProfile() {
-        int totalDesiredUserCount = 500;
+        int totalDesiredUserCount = 1_000;
         double userRampUpPerInterval = 50;
         double rampUpIntervalSeconds = 30;
         int totalRampUptimeSeconds = 120;
