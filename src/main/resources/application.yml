@@ -3,7 +3,20 @@ spring:
     active: dev
   redis:
     redisson:
-      file: classpath:redisson.yml
+      config: |
+        sentinelServersConfig:
+          idleConnectionTimeout: 10000
+          connectTimeout: 10000
+          timeout: 100
+          masterName: "mymaster"
+          database: 0
+          failedSlaveNodeDetector: !<org.redisson.client.FailedCommandsTimeoutDetector> {checkInterval: 1000, failedCommandsLimit: 1}
+          sentinelAddresses: ${SPRING_REDIS_REDISON_SENTINEL_ADDRESSES: ["redis://127.0.0.1:26379", "redis://127.0.0.1:26379", "redis://127.0.0.1:26379"]}
+          retryAttempts: 3
+          retryInterval: 10000
+          checkSentinelsList: false
+          sentinelsDiscovery: true
+
 
 
   datasource:

@@ -41,7 +41,7 @@ services:
     environment:
       SPRING_PROFILES_ACTIVE: dev
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/postgres
-     # SENTINEL_ADDRESSES: '["redis://sentinel-1:26379", "redis://sentinel-2:26379", "redis://sentinel-3:26379"]'
+      SPRING_REDIS_REDISON_SENTINEL_ADDRESSES: '["redis://sentinel-1:26379", "redis://sentinel-2:26379", "redis://sentinel-3:26379"]'
     deploy:
       replicas: 2
       restart_policy:
